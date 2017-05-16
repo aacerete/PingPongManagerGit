@@ -37,7 +37,7 @@
             this.txNombreJugador = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.label1 = new System.Windows.Forms.Label();
+            this.lblListaJugadores = new System.Windows.Forms.Label();
             this.btnModificarPlayer = new System.Windows.Forms.Button();
             this.lvJugadores = new System.Windows.Forms.ListView();
             this.Competicion = new System.Windows.Forms.TabPage();
@@ -53,11 +53,13 @@
             this.label6 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.listView3 = new System.Windows.Forms.ListView();
-            this.label4 = new System.Windows.Forms.Label();
+            this.lblClasificacion = new System.Windows.Forms.Label();
             this.btnCancelarCompeticion = new System.Windows.Forms.Button();
             this.btnNuevaCompeticion = new System.Windows.Forms.Button();
             this.listView2 = new System.Windows.Forms.ListView();
             this.label3 = new System.Windows.Forms.Label();
+            this.btnGuardar = new System.Windows.Forms.Button();
+            this.btnCancelar = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.Jugadores.SuspendLayout();
             this.PanelJugadores.SuspendLayout();
@@ -81,7 +83,7 @@
             this.Jugadores.Controls.Add(this.btnAñadirPlayer);
             this.Jugadores.Controls.Add(this.btnEliminarPlayer);
             this.Jugadores.Controls.Add(this.PanelJugadores);
-            this.Jugadores.Controls.Add(this.label1);
+            this.Jugadores.Controls.Add(this.lblListaJugadores);
             this.Jugadores.Controls.Add(this.btnModificarPlayer);
             this.Jugadores.Controls.Add(this.lvJugadores);
             this.Jugadores.Location = new System.Drawing.Point(4, 22);
@@ -100,6 +102,7 @@
             this.btnAñadirPlayer.TabIndex = 6;
             this.btnAñadirPlayer.Text = "Añadir nuevo";
             this.btnAñadirPlayer.UseVisualStyleBackColor = true;
+            this.btnAñadirPlayer.Click += new System.EventHandler(this.btnAñadirPlayer_Click);
             // 
             // btnEliminarPlayer
             // 
@@ -112,6 +115,8 @@
             // 
             // PanelJugadores
             // 
+            this.PanelJugadores.Controls.Add(this.btnCancelar);
+            this.PanelJugadores.Controls.Add(this.btnGuardar);
             this.PanelJugadores.Controls.Add(this.btnImagen);
             this.PanelJugadores.Controls.Add(this.txNombreJugador);
             this.PanelJugadores.Controls.Add(this.label2);
@@ -129,7 +134,7 @@
             this.btnImagen.TabIndex = 3;
             this.btnImagen.Text = "Imagen";
             this.btnImagen.UseVisualStyleBackColor = true;
-            this.btnImagen.Click += new System.EventHandler(this.button4_Click);
+            this.btnImagen.Click += new System.EventHandler(this.btnImagen_Click);
             // 
             // txNombreJugador
             // 
@@ -155,15 +160,15 @@
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             // 
-            // label1
+            // lblListaJugadores
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(8, 14);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(93, 13);
-            this.label1.TabIndex = 3;
-            this.label1.Text = "Lista de jugadores";
-            this.label1.Click += new System.EventHandler(this.label1_Click);
+            this.lblListaJugadores.AutoSize = true;
+            this.lblListaJugadores.Location = new System.Drawing.Point(8, 14);
+            this.lblListaJugadores.Name = "lblListaJugadores";
+            this.lblListaJugadores.Size = new System.Drawing.Size(93, 13);
+            this.lblListaJugadores.TabIndex = 3;
+            this.lblListaJugadores.Text = "Lista de jugadores";
+
             // 
             // btnModificarPlayer
             // 
@@ -210,7 +215,7 @@
             this.panelCompeticion.Controls.Add(this.label6);
             this.panelCompeticion.Controls.Add(this.label5);
             this.panelCompeticion.Controls.Add(this.listView3);
-            this.panelCompeticion.Controls.Add(this.label4);
+            this.panelCompeticion.Controls.Add(this.lblClasificacion);
             this.panelCompeticion.Location = new System.Drawing.Point(196, 42);
             this.panelCompeticion.Name = "panelCompeticion";
             this.panelCompeticion.Size = new System.Drawing.Size(527, 312);
@@ -302,15 +307,15 @@
             this.listView3.TabIndex = 1;
             this.listView3.UseCompatibleStateImageBehavior = false;
             // 
-            // label4
+            // lblClasificacion
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(14, 15);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(98, 13);
-            this.label4.TabIndex = 0;
-            this.label4.Text = "Clasificacion actual";
-            this.label4.Click += new System.EventHandler(this.label4_Click);
+            this.lblClasificacion.AutoSize = true;
+            this.lblClasificacion.Location = new System.Drawing.Point(14, 15);
+            this.lblClasificacion.Name = "lblClasificacion";
+            this.lblClasificacion.Size = new System.Drawing.Size(98, 13);
+            this.lblClasificacion.TabIndex = 0;
+            this.lblClasificacion.Text = "Clasificacion actual";
+
             // 
             // btnCancelarCompeticion
             // 
@@ -347,6 +352,24 @@
             this.label3.TabIndex = 0;
             this.label3.Text = "Lista de competiciones";
             // 
+            // btnGuardar
+            // 
+            this.btnGuardar.Location = new System.Drawing.Point(440, 251);
+            this.btnGuardar.Name = "btnGuardar";
+            this.btnGuardar.Size = new System.Drawing.Size(75, 23);
+            this.btnGuardar.TabIndex = 4;
+            this.btnGuardar.Text = "Guardar";
+            this.btnGuardar.UseVisualStyleBackColor = true;
+            // 
+            // btnCancelar
+            // 
+            this.btnCancelar.Location = new System.Drawing.Point(350, 251);
+            this.btnCancelar.Name = "btnCancelar";
+            this.btnCancelar.Size = new System.Drawing.Size(75, 23);
+            this.btnCancelar.TabIndex = 5;
+            this.btnCancelar.Text = "Cancelar";
+            this.btnCancelar.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -376,7 +399,7 @@
         private System.Windows.Forms.TabPage Competicion;
         private System.Windows.Forms.Button btnModificarPlayer;
         private System.Windows.Forms.ListView lvJugadores;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label lblListaJugadores;
         private System.Windows.Forms.Button btnEliminarPlayer;
         private System.Windows.Forms.Panel PanelJugadores;
         private System.Windows.Forms.PictureBox pictureBox1;
@@ -389,7 +412,7 @@
         private System.Windows.Forms.ListView listView2;
         private System.Windows.Forms.Button btnCancelarCompeticion;
         private System.Windows.Forms.Panel panelCompeticion;
-        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label lblClasificacion;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.ListView listView3;
         private System.Windows.Forms.Label label6;
@@ -401,6 +424,8 @@
         private System.Windows.Forms.TextBox txbResultP2;
         private System.Windows.Forms.TextBox txbResultP1;
         private System.Windows.Forms.Button btnGuardarResultado;
+        private System.Windows.Forms.Button btnCancelar;
+        private System.Windows.Forms.Button btnGuardar;
     }
 }
 
