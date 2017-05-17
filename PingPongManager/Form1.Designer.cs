@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.dialogImagen = new System.Windows.Forms.OpenFileDialog();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.Jugadores = new System.Windows.Forms.TabPage();
             this.btnAñadirPlayer = new System.Windows.Forms.Button();
@@ -67,6 +68,17 @@
             this.Competicion.SuspendLayout();
             this.panelCompeticion.SuspendLayout();
             this.SuspendLayout();
+
+            //
+            // dialogImagen
+            //
+
+            this.dialogImagen.FileName = "dialogImagen";
+            this.dialogImagen.Filter = "JPEG Files (*.jpg)|*.jpg|PNG Files (*.png)|*.png|BMP Files (*.bmp)|*.bmp|All file" +
+    "s (*.*)|*.*";
+            this.dialogImagen.Title = "Elije una imagen";
+
+
             // 
             // tabControl1
             // 
@@ -360,6 +372,7 @@
             this.btnGuardar.TabIndex = 4;
             this.btnGuardar.Text = "Guardar";
             this.btnGuardar.UseVisualStyleBackColor = true;
+            this.btnGuardar.Click += new System.EventHandler(this.btnGuardar_Click);
             // 
             // btnCancelar
             // 
@@ -369,6 +382,7 @@
             this.btnCancelar.TabIndex = 5;
             this.btnCancelar.Text = "Cancelar";
             this.btnCancelar.UseVisualStyleBackColor = true;
+            this.btnCancelar.Click += new System.EventHandler(this.btnCancelar_Click);
             // 
             // Form1
             // 
@@ -426,6 +440,7 @@
         private System.Windows.Forms.Button btnGuardarResultado;
         private System.Windows.Forms.Button btnCancelar;
         private System.Windows.Forms.Button btnGuardar;
+        private System.Windows.Forms.OpenFileDialog dialogImagen;
     }
 }
 
