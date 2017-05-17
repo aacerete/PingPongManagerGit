@@ -15,15 +15,20 @@ namespace PingPongManager
     public partial class Form1 : Form
     {
 
-        private bool AñadirPlayer = false;
         private Jugador jugador;
         private List<Jugador> jugadores = new List<Jugador>();
         private String imagen;
-        
+        private Boolean añadiendo;
+        private Boolean modificando;
+        private Boolean eliminando;
+        private int posJugador;
+
 
 
         public Form1()
         {
+
+                      
             InitializeComponent();
             desactivaPanelJugador();
             desactivaBotonesJugador();
@@ -35,13 +40,23 @@ namespace PingPongManager
 
         private void btnAñadirPlayer_Click(object sender, EventArgs e)
         {
+            clearRegistros();
             activaPanelJugador();
+            añadiendo = true;
 
+        }
+
+        private void btnModificarPlayer_Click(object sender, EventArgs e)
+        {
+            activaPanelJugador();
+            activaGuardarRegistroJugador();
+            modificando = true;
+            
         }
 
         private void desactivaPanelJugador()
         {
-            AñadirPlayer = false;
+           
             desactivaGuardarRegistroJugador();
             desactivaBotonesJugador();
             btnImagen.Enabled = false;
@@ -50,7 +65,7 @@ namespace PingPongManager
 
         private void activaPanelJugador()
         {
-            AñadirPlayer = true;
+            
             activaGuardarRegistroJugador();
             desactivaBotonesJugador();
             btnImagen.Enabled = true;
@@ -77,6 +92,21 @@ namespace PingPongManager
             activaBotonesJugador();
         }
 
+        private void btnImagen_Click(object sender, EventArgs e)
+        {
+            if (dialogImagen.ShowDialog() == DialogResult.OK)
+            {
+                imagen = dialogImagen.FileName;
+                pictureBox1.Load(dialogImagen.FileName);
+            }
+        }
+
+        private void btnEliminarPlayer_Click(object sender, EventArgs e)
+        {
+            deleteFromFireBaseJugador(jugadores[lvJugadores.SelectedIndices[0]]);
+        }
+
+
         private void activaBotonesJugador()
         {
             btnAñadirPlayer.Enabled = true;
@@ -92,56 +122,61 @@ namespace PingPongManager
 
         }
 
-        private void btnImagen_Click(object sender, EventArgs e)
-        {
-            if (dialogImagen.ShowDialog() == DialogResult.OK)
-            {
-                imagen = dialogImagen.FileName;
-                pictureBox1.Load(dialogImagen.FileName);
-            }
-        }
+
 
         private void btnGuardar_Click(object sender, EventArgs e)
         {
 
-            if (string.IsNullOrEmpty(txNombreJugador.Text))
+            if (añadiendo)
             {
-                MessageBox.Show("Introduce un nombre para continuar");
+                if (string.IsNullOrEmpty(txNombreJugador.Text))
+                {
+                    MessageBox.Show("Introduce un nombre para continuar");
+                }
+                else if (string.IsNullOrEmpty(imagen))
+                {
+                    MessageBox.Show("Introduce una imagen para continuar");
+                }
+                else
+                {
+                    jugador = new Jugador(txNombreJugador.Text, imagen);
+                    //jugadores.Add(jugador);
+                    setToFireBaseJugador(jugador);
+
+                    MessageBox.Show("Jugador guardado en la BBDD");
+
+
+                    desactivaPanelJugador();
+                    activaBotonesJugador();
+                }
+                clearRegistros();
+                getFromFireBaseJugador();
+                añadiendo = false;
             }
-            else if (string.IsNullOrEmpty(imagen))
+
+            if (modificando)
             {
-                MessageBox.Show("Introduce una imagen para continuar");
-            }
-            else
-            {
-                jugador = new Jugador(txNombreJugador.Text, imagen);
-                //jugadores.Add(jugador);
-                setToFireBaseJugador();
 
-                MessageBox.Show("Jugador guardado en la BBDD");
-
-                actualizaListViewJugadores();
-
+                jugadores[posJugador].Nombre = txNombreJugador.Text;
+                updateToFireBaseJugador(jugadores[posJugador]);
                 desactivaPanelJugador();
                 activaBotonesJugador();
+                clearRegistros();
+
+                modificando = false;
             }
+
+
+                       
+            
         }
 
         private void reiniciaListViewJugadores()
         {
+            this.jugadores = new List<Jugador>();
             this.lvJugadores.Items.Clear();
             this.lvJugadores.Update();
             this.lvJugadores.Refresh();
-            this.lvJugadores.View = View.List;
-        }
-
-        private void actualizaListViewJugadores()
-        {
-            reiniciaListViewJugadores();
-            for (int i = 0; i < jugadores.Count; i++)
-            {
-                lvJugadores.Items.Add(jugadores[i].Nombre);
-            }
         }
 
         private void lvJugadores_ItemActivate(object sender, EventArgs e)
@@ -150,27 +185,33 @@ namespace PingPongManager
             int i = lvJugadores.SelectedIndices[0];
             Jugador j = jugadores[i];
             txNombreJugador.Text = j.Nombre;
+            pictureBox1.Load(j.Image);
+
+            activaBotonesJugador();
+
         }
 
 
-        private async Task setToFireBaseJugador()
+        private async Task setToFireBaseJugador(Jugador jugador)
         {
             var client = new FirebaseClient("https://pingpongmanager-cf07a.firebaseio.com/");
-            var child = client.Child("jugadores/");
+            var child = client.Child("jugadores");
 
             var jugador1 = await child.PostAsync(jugador);
-            jugador.Id = jugador1.Key;
+          
                        
         }
 
         private async Task getFromFireBaseJugador()
         {
+            reiniciaListViewJugadores();
             var firebase = new FirebaseClient("https://pingpongmanager-cf07a.firebaseio.com/");
             var ListajugadoresFireBase = await firebase.Child("jugadores").OnceAsync<Jugador>();
                         
             foreach (var jugador1 in ListajugadoresFireBase)
             {
                 Jugador j = jugador1.Object;
+                j.Id = jugador1.Key;
                 this.jugadores.Add(j);
             }
 
@@ -180,6 +221,37 @@ namespace PingPongManager
             {
                 lvJugadores.Items.Add(jugadores[i].Nombre);
             }
+
+        }
+
+        private async Task deleteFromFireBaseJugador(Jugador jugador)
+        {
+            var client = new FirebaseClient("https://pingpongmanager-cf07a.firebaseio.com/");
+            var child = client.Child("jugadores/" + jugador.Id);
+            await child.DeleteAsync();
+
+            MessageBox.Show("Jugador eliminado de la BBDD");
+
+            clearRegistros();
+            getFromFireBaseJugador();
+        }
+
+        private async Task updateToFireBaseJugador(Jugador jugador)
+        {
+            var client = new FirebaseClient("https://pingpongmanager-cf07a.firebaseio.com/");
+            var child = client.Child("jugadores/" + jugador.Id);
+
+            await child.PutAsync(jugador);
+
+            MessageBox.Show("Jugador actualizado en la BBDD");
+            clearRegistros();
+            getFromFireBaseJugador();
+        }
+
+        private void clearRegistros()
+        {
+            txNombreJugador.Clear();
+            pictureBox1.Image = null;
         }
 
     }

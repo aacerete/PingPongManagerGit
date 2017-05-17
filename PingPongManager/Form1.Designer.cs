@@ -124,6 +124,7 @@
             this.btnEliminarPlayer.TabIndex = 5;
             this.btnEliminarPlayer.Text = "Eliminar seleccionado";
             this.btnEliminarPlayer.UseVisualStyleBackColor = true;
+            this.btnEliminarPlayer.Click += new System.EventHandler(this.btnEliminarPlayer_Click);
             // 
             // PanelJugadores
             // 
@@ -190,6 +191,7 @@
             this.btnModificarPlayer.TabIndex = 2;
             this.btnModificarPlayer.Text = "Modificar seleccionado";
             this.btnModificarPlayer.UseVisualStyleBackColor = true;
+            this.btnModificarPlayer.Click += new System.EventHandler(this.btnModificarPlayer_Click);
             // 
             // lvJugadores
             // 
