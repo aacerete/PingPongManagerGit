@@ -9,7 +9,7 @@ namespace PingPongManager
 {
     class Jugador
     {
-        public int Id { get; set; }
+        public String Id { get; set; }
         public String Nombre { get; set; }
         public String Image { get; set; }
         public int Jugados { get; set; }
@@ -19,6 +19,11 @@ namespace PingPongManager
         {
             Nombre = nombre;
             Image = image;
+        }
+
+        public override string ToString()
+        {
+            return Nombre + " - " + Id;
         }
     }
 }

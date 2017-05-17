@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Firebase.Database;
+
 
 namespace PingPongManager
 {
@@ -17,15 +19,16 @@ namespace PingPongManager
         private Jugador jugador;
         private List<Jugador> jugadores = new List<Jugador>();
         private String imagen;
+        
 
 
         public Form1()
         {
             InitializeComponent();
-
             desactivaPanelJugador();
             desactivaBotonesJugador();
             btnAñadirPlayer.Enabled = true;
+            getFromFireBaseJugador();
 
 
         }
@@ -112,7 +115,8 @@ namespace PingPongManager
             else
             {
                 jugador = new Jugador(txNombreJugador.Text, imagen);
-                jugadores.Add(jugador);
+                //jugadores.Add(jugador);
+                setToFireBaseJugador();
 
                 MessageBox.Show("Jugador guardado en la BBDD");
 
@@ -139,5 +143,44 @@ namespace PingPongManager
                 lvJugadores.Items.Add(jugadores[i].Nombre);
             }
         }
+
+        private void lvJugadores_ItemActivate(object sender, EventArgs e)
+        {
+
+            int i = lvJugadores.SelectedIndices[0];
+            Jugador j = jugadores[i];
+            txNombreJugador.Text = j.Nombre;
+        }
+
+
+        private async Task setToFireBaseJugador()
+        {
+            var client = new FirebaseClient("https://pingpongmanager-cf07a.firebaseio.com/");
+            var child = client.Child("jugadores/");
+
+            var jugador1 = await child.PostAsync(jugador);
+            jugador.Id = jugador1.Key;
+                       
+        }
+
+        private async Task getFromFireBaseJugador()
+        {
+            var firebase = new FirebaseClient("https://pingpongmanager-cf07a.firebaseio.com/");
+            var ListajugadoresFireBase = await firebase.Child("jugadores").OnceAsync<Jugador>();
+                        
+            foreach (var jugador1 in ListajugadoresFireBase)
+            {
+                Jugador j = jugador1.Object;
+                this.jugadores.Add(j);
+            }
+
+            lvJugadores.View = View.List;
+
+            for (int i = 0; i < jugadores.Count; i++)
+            {
+                lvJugadores.Items.Add(jugadores[i].Nombre);
+            }
+        }
+
     }
 }

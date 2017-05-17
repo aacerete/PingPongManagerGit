@@ -198,6 +198,10 @@
             this.lvJugadores.Size = new System.Drawing.Size(168, 212);
             this.lvJugadores.TabIndex = 0;
             this.lvJugadores.UseCompatibleStateImageBehavior = false;
+            this.lvJugadores.Activation = System.Windows.Forms.ItemActivation.OneClick;
+            this.lvJugadores.ItemActivate += new System.EventHandler(this.lvJugadores_ItemActivate);
+
+
             // 
             // Competicion
             // 
